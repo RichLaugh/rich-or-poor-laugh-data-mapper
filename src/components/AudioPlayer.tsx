@@ -22,7 +22,7 @@ export function AudioPlayer({ src, onEnded }: AudioPlayerProps) {
   } = useAudioPlayer();
 
   return (
-    <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-md p-4">
+    <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-xl p-4">
       <audio
         ref={audioRef}
         src={src}

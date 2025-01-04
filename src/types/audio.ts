@@ -1,5 +1,3 @@
-export type LabelCategory = 'evil' | 'rich' | 'poor';
-
 export interface AudioFile {
   id: string;
   name: string;

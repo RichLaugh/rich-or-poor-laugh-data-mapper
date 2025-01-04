@@ -1,18 +1,17 @@
 import React from 'react';
-import { LabelCategory } from '../types/audio';
 import { categories } from '../config/categories';
+import Tooltip from "./Tooltip.tsx";
 
 interface LabelingControlsProps {
-  onLabel: (category: LabelCategory) => void;
+  onLabel: (category: string) => void;
   disabled?: boolean;
 }
 
 export function LabelingControls({ onLabel, disabled }: LabelingControlsProps) {
   return (
     <div className="flex flex-wrap justify-center gap-4 p-4">
-      {categories.map(({ value, label, color }) => (
+      {categories.map(({ value, label, color, description }) => (<Tooltip text={description} key={value}>
         <button
-          key={value}
           onClick={() => onLabel(value)}
           disabled={disabled}
           className={`${color} text-white font-semibold py-3 px-6 rounded-lg 
@@ -22,7 +21,7 @@ export function LabelingControls({ onLabel, disabled }: LabelingControlsProps) {
         >
           {label}
         </button>
-      ))}
+      </Tooltip>))}
     </div>
   );
 }
