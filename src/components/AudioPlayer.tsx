@@ -62,9 +62,9 @@ export function AudioPlayer({ src, onEnded }: AudioPlayerProps) {
         <input
           type="range"
           min={0}
-          max={duration}
-          value={currentTime}
-          onChange={(e) => seek(Number(e.target.value))}
+          max={duration * 100}
+          value={currentTime * 100}
+          onChange={(e) => seek(Number(e.target.value)/ 100)}
           className="w-full"
         />
         <div className="flex justify-between text-sm text-gray-500">

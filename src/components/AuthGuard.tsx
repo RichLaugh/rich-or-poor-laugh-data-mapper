@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { AuthForm } from './AuthForm';
 
@@ -8,6 +8,9 @@ interface AuthGuardProps {
 
 export function AuthGuard({ children }: AuthGuardProps) {
   const { user, loading, login, register } = useAuth();
+  useEffect(() => {
+    console.log('AuthGuard user from useAuth hook changed:', user);
+  }, [user]);
 
   if (loading) {
     return (

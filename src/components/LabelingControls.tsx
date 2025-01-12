@@ -1,5 +1,4 @@
 import React from 'react';
-import { categories } from '../config/categories';
 import Tooltip from "./Tooltip.tsx";
 
 interface LabelingControlsProps {
@@ -7,19 +6,19 @@ interface LabelingControlsProps {
   disabled?: boolean;
 }
 
-export function LabelingControls({ onLabel, disabled }: LabelingControlsProps) {
+export function LabelingControls({ onLabel, disabled, categories }: LabelingControlsProps) {
   return (
     <div className="flex flex-wrap justify-center gap-4 p-4">
-      {categories.map(({ value, label, color, description }) => (<Tooltip text={description} key={value}>
+      {categories.map(({ name, label, color, description, audio_count }) => (<Tooltip text={description} key={name}>
         <button
-          onClick={() => onLabel(value)}
+          onClick={() => onLabel(name)}
           disabled={disabled}
           className={`${color} text-white font-semibold py-3 px-6 rounded-lg 
             transition-all duration-200 transform hover:scale-105 
             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
             min-w-[120px]`}
         >
-          {label}
+          {label} ({audio_count})
         </button>
       </Tooltip>))}
     </div>

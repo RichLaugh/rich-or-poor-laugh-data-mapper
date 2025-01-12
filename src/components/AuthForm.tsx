@@ -3,6 +3,7 @@ import { LoginCredentials } from '../types/auth';
 
 interface AuthFormProps {
   onSubmit: (credentials: LoginCredentials) => Promise<void>;
+  onRegister: (credentials: LoginCredentials) => Promise<void>;
   type: 'login' | 'register';
 }
 

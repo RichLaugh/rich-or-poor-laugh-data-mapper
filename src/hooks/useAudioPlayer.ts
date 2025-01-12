@@ -34,6 +34,7 @@ export function useAudioPlayer() {
   const handleTimeUpdate = () => {
     if (audioRef.current) {
       setCurrentTime(audioRef.current.currentTime);
+      console.log(audioRef.current.currentTime);
     }
   };
 

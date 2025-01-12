@@ -1,8 +1,12 @@
 import { AuthResponse, LoginCredentials, RegisterCredentials, User } from '../types/auth';
+import {toast} from 'react-toastify';
 
-const API_URL = 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_APP_HOST;
 
 export async function register(credentials: RegisterCredentials): Promise<void> {
+  if (credentials.username.length === 0 || credentials.password.length === 0) {
+    toast.error('Username and Password must not be empty');
+  }
   const response = await fetch(`${API_URL}/register`, {
     method: 'POST',
     headers: {
@@ -10,7 +14,10 @@ export async function register(credentials: RegisterCredentials): Promise<void> 
     },
     body: JSON.stringify(credentials),
   });
-
+  if (response.ok) {
+    const responseBody = await response.json();
+    toast.info(`User: ${responseBody.username} successfuly registered`)
+  }
   if (!response.ok) {
     throw new Error('Registration failed');
   }
@@ -37,7 +44,7 @@ export async function login(credentials: LoginCredentials): Promise<AuthResponse
 }
 
 export async function getCurrentUser(token: string): Promise<User> {
-  const response = await fetch(`${API_URL}/users/me`, {
+  const response = await fetch(`${API_URL}/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

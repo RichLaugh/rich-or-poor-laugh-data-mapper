@@ -13,6 +13,7 @@ export function useAuth() {
   const loadUser = useCallback(async (authToken: string) => {
     try {
       const userData = await authService.getCurrentUser(authToken);
+      console.log(userData);
       setUser(userData);
     } catch (err) {
       setError('Failed to load user data');
@@ -21,7 +22,7 @@ export function useAuth() {
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     if (token) {
@@ -38,6 +39,7 @@ export function useAuth() {
       setToken(response.access_token);
       localStorage.setItem('token', response.access_token);
       await loadUser(response.access_token);
+      console.log(user);
     } catch (err) {
       setError('Login failed');
       throw err;
