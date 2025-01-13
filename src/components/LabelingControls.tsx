@@ -7,7 +7,6 @@ interface LabelingControlsProps {
 }
 
 export function LabelingControls({ onLabel, disabled, categories }: LabelingControlsProps) {
-  console.log(categories)
   return (
     <div className="flex flex-wrap justify-center gap-4 p-4">
       {categories.map(({ name, label, color, description, audio_count }) => (<Tooltip text={description} key={name}>

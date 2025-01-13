@@ -6,11 +6,6 @@ interface AuthGuardProps {
 }
 
 export function AuthGuard({ user, loading, login, register, children }: AuthGuardProps) {
-
-  useEffect(() => {
-    console.log('AuthGuard user from useAuth hook changed:', user);
-  }, [user]);
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">

@@ -1,6 +1,6 @@
 export interface AudioFile {
   id: string;
   name: string;
-  path: string;
-  duration: number;
+  url: string;
+  category: string | null;
 }

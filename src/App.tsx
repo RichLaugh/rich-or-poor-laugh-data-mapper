@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useMemo} from 'react';
 import {AudioPlayer} from './components/AudioPlayer';
 import {LabelingControls} from './components/LabelingControls';
 import {ProgressBar} from './components/ProgressBar';
@@ -7,59 +7,12 @@ import {AudioFile} from './types/audio';
 import {AuthGuard} from './components/AuthGuard';
 import {useAuth} from './hooks/useAuth';
 import Select from 'react-select';
+import {getAudioList, getCategories} from "./services/audio.ts";
 function App() {
   const [audioFiles, setAudioFiles] = useState<AudioFile[]>([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const { user, loading, login, register, logout, token } = useAuth();
-
-  const fetchCategories = async () => {
-    const response = await fetch(`${import.meta.env.VITE_APP_HOST}/categories`);
-    if (!response.ok) throw new Error('Failed to fetch categories');
-    return await response.json();
-  };
-
-  const fetchAudios = async (category) => {
-    const url = category
-        ? `${import.meta.env.VITE_APP_HOST}/audio/audio-list?category=${category}`
-        : `${import.meta.env.VITE_APP_HOST}/audio/audio-list`;
-    const response = await fetch(url);
-    if (!response.ok) throw new Error('Failed to fetch audios');
-    return await response.json();
-  };
-  const categoryOptions = categories.map((category) => ({
-      value: category.name,
-      label: category.label,
-    }));
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const data = await fetchCategories();
-        setCategories(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    loadCategories();
-    fetch(`${import.meta.env.VITE_APP_HOST}/audio/audio-list`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Ошибка при загрузке списка аудио');
-        }
-        return response.json();
-      })
-      .then((data: AudioFile[]) => {
-        setAudioFiles(data);
-      })
-      .catch(error => {
-        console.error('Ошибка загрузки /audio-list:', error);
-      });
-  }, [token]);
-
   const {
     currentFile,
     currentFileIndex,
@@ -68,9 +21,36 @@ function App() {
     handleLabel,
     handleAudioEnd,
   } = useAudioLabeling(audioFiles);
+
+  const categoryOptions = useMemo(() => categories.map((category) => ({
+      value: category.name,
+      label: category.label,
+    })), [categories]);
+
   useEffect(() => {
-    console.log('App user from useAuth hook changed:', user);
-  }, [user]);
+    console.log('selectedCategory', selectedCategory)
+    const reloadAudioList = async () => {
+      let audioList = await getAudioList(selectedCategory.value);
+      setAudioFiles(audioList)
+    }
+    reloadAudioList();
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      let categoriesLoaded = await getCategories();
+      setCategories(categoriesLoaded)
+    }
+    loadCategories();
+  }, []);
+
+  useEffect(() => {
+    console.log(audioFiles)
+  }, [audioFiles]);
+  useEffect(() => {
+    console.log(categories)
+  }, [categories]);
+
   return (
     <AuthGuard user={user} loading={loading} login={login} register={register}>
       <div className="min-h-screen bg-blue-200 px-4">

@@ -13,7 +13,6 @@ export function useAuth() {
   const loadUser = useCallback(async (authToken: string) => {
     try {
       const userData = await authService.getCurrentUser(authToken);
-      console.log(userData);
       setUser(userData);
     } catch (err) {
       setError('Failed to load user data');
