@@ -12,7 +12,7 @@ function App() {
   const [audioFiles, setAudioFiles] = useState<AudioFile[]>([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const { user, loading, login, register, logout, token } = useAuth();
+  const { user, loading, login, register, logout } = useAuth();
   const {
     currentFile,
     currentFileIndex,
@@ -20,20 +20,19 @@ function App() {
     labeledFiles,
     handleLabel,
     handleAudioEnd,
+    skip
   } = useAudioLabeling(audioFiles);
 
   const categoryOptions = useMemo(() => categories.map((category) => ({
       value: category.name,
       label: category.label,
     })), [categories]);
-
+  const loadAudioList = async () => {
+    let audioList = await getAudioList(selectedCategory?.value);
+    setAudioFiles(audioList)
+  }
   useEffect(() => {
-    console.log('selectedCategory', selectedCategory)
-    const reloadAudioList = async () => {
-      let audioList = await getAudioList(selectedCategory.value);
-      setAudioFiles(audioList)
-    }
-    reloadAudioList();
+    loadAudioList();
   }, [selectedCategory]);
 
   useEffect(() => {
@@ -42,14 +41,7 @@ function App() {
       setCategories(categoriesLoaded)
     }
     loadCategories();
-  }, []);
-
-  useEffect(() => {
-    console.log(audioFiles)
-  }, [audioFiles]);
-  useEffect(() => {
-    console.log(categories)
-  }, [categories]);
+  }, [currentFile]);
 
   return (
     <AuthGuard user={user} loading={loading} login={login} register={register}>
@@ -85,7 +77,7 @@ function App() {
 
 
           <ProgressBar
-              current={labeledFiles.size}
+              current={currentFileIndex}
               total={totalFiles}
           />
 
@@ -102,6 +94,7 @@ function App() {
 
               <AudioPlayer
                 src={currentFile.url}
+                skip={skip}
                 onEnded={handleAudioEnd}
               />
 
@@ -114,12 +107,12 @@ function App() {
           )}
 
           {labeledFiles.size === totalFiles && (
-            <div className="text-center p-8 bg-green-100 rounded-lg">
-              <h2 className="text-2xl font-bold text-green-800 mb-2">
-                All files have been labeled!
+            <div className="text-center p-8 bg-white rounded-lg">
+              <h2 className="text-2xl font-bold text-black-800 mb-2">
+                No files here for labeling!
               </h2>
               <p className="text-green-700">
-                Great job! You've completed the labeling task.
+                Select another category
               </p>
             </div>
           )}

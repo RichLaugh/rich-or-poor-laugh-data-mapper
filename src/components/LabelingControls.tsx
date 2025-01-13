@@ -1,12 +1,7 @@
 import React from 'react';
 import Tooltip from "./Tooltip.tsx";
 
-interface LabelingControlsProps {
-  onLabel: (category: string) => void;
-  disabled?: boolean;
-}
-
-export function LabelingControls({ onLabel, disabled, categories }: LabelingControlsProps) {
+export function LabelingControls({ onLabel, disabled, categories}) {
   return (
     <div className="flex flex-wrap justify-center gap-4 p-4">
       {categories.map(({ name, label, color, description, audio_count }) => (<Tooltip text={description} key={name}>

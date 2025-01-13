@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 export function useAudioPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -17,6 +17,18 @@ export function useAudioPlayer() {
     }
   };
 
+  const reload = () => {
+      setCurrentTime(0);
+      setIsPlaying(false);
+      togglePlay();
+  }
+
+  useEffect(()=>{
+    if (currentTime === duration) {
+      reload();
+    }
+  },[currentTime])
+
   const seek = (time: number) => {
     if (audioRef.current) {
       audioRef.current.currentTime = time;
@@ -24,17 +36,9 @@ export function useAudioPlayer() {
     }
   };
 
-  const skip = (seconds: number) => {
-    if (audioRef.current) {
-      const newTime = Math.max(0, Math.min(currentTime + seconds, duration));
-      seek(newTime);
-    }
-  };
-
   const handleTimeUpdate = () => {
     if (audioRef.current) {
       setCurrentTime(audioRef.current.currentTime);
-      console.log(audioRef.current.currentTime);
     }
   };
 
@@ -51,7 +55,7 @@ export function useAudioPlayer() {
     duration,
     togglePlay,
     seek,
-    skip,
+    reload,
     handleTimeUpdate,
     handleLoadedMetadata,
   };

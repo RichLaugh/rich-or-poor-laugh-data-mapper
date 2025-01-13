@@ -32,4 +32,28 @@ export async function markAudio(name, category)
         name: name,
         category: category
     }
+    try {
+        // Make the POST request
+        const response = await fetch(
+          `${import.meta.env.VITE_APP_HOST}/audio/mark`,
+          {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(audioData),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status} ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error marking audio:', error);
+        // You could return null, an error object, or rethrow depending on your needs
+        return null;
+    }
 }

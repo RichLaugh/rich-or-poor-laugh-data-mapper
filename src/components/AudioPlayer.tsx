@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Play, Pause, SkipBack, SkipForward } from 'lucide-react';
 import { useAudioPlayer } from '../hooks/useAudioPlayer';
 import { formatTime } from '../utils/time';
@@ -8,7 +8,7 @@ interface AudioPlayerProps {
   onEnded?: () => void;
 }
 
-export function AudioPlayer({ src, onEnded }: AudioPlayerProps) {
+export function AudioPlayer({ src, onEnded, skip }: AudioPlayerProps) {
   const {
     audioRef,
     isPlaying,
@@ -16,10 +16,14 @@ export function AudioPlayer({ src, onEnded }: AudioPlayerProps) {
     duration,
     togglePlay,
     seek,
-    skip,
+    reload,
     handleTimeUpdate,
     handleLoadedMetadata,
   } = useAudioPlayer();
+
+  useEffect(() => {
+    reload();
+  }, [src]);
 
   return (
     <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-xl p-4">
@@ -33,7 +37,7 @@ export function AudioPlayer({ src, onEnded }: AudioPlayerProps) {
       
       <div className="flex items-center justify-center space-x-4 mb-4">
         <button
-          onClick={() => skip(-10)}
+          onClick={() => skip(-1)}
           className="p-2 rounded-full hover:bg-gray-100"
         >
           <SkipBack className="w-6 h-6" />
@@ -51,7 +55,7 @@ export function AudioPlayer({ src, onEnded }: AudioPlayerProps) {
         </button>
         
         <button
-          onClick={() => skip(10)}
+          onClick={() => skip(1)}
           className="p-2 rounded-full hover:bg-gray-100"
         >
           <SkipForward className="w-6 h-6" />
