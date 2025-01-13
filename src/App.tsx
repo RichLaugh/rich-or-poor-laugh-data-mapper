@@ -11,7 +11,7 @@ function App() {
   const [audioFiles, setAudioFiles] = useState<AudioFile[]>([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const { user, logout, token } = useAuth();
+  const { user, loading, login, register, logout, token } = useAuth();
 
   const fetchCategories = async () => {
     const response = await fetch(`${import.meta.env.VITE_APP_HOST}/categories`);
@@ -72,7 +72,7 @@ function App() {
     console.log('App user from useAuth hook changed:', user);
   }, [user]);
   return (
-    <AuthGuard>
+    <AuthGuard user={user} loading={loading} login={login} register={register}>
       <div className="min-h-screen bg-blue-200 px-4">
         <div className="max-w-4xl mx-auto">
           <Select

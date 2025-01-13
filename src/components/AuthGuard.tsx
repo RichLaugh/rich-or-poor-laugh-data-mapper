@@ -1,13 +1,12 @@
 import React, {useEffect} from 'react';
-import { useAuth } from '../hooks/useAuth';
 import { AuthForm } from './AuthForm';
 
 interface AuthGuardProps {
   children: React.ReactNode;
 }
 
-export function AuthGuard({ children }: AuthGuardProps) {
-  const { user, loading, login, register } = useAuth();
+export function AuthGuard({ user, loading, login, register, children }: AuthGuardProps) {
+
   useEffect(() => {
     console.log('AuthGuard user from useAuth hook changed:', user);
   }, [user]);
