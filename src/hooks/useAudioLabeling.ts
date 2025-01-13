@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import { AudioFile, LabelCategory } from '../types/audio';
 import {markAudio} from "../services/audio.ts";
+import {toast} from 'react-toastify';
 
 export function useAudioLabeling(audioFiles: AudioFile[]) {
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
@@ -17,10 +18,11 @@ export function useAudioLabeling(audioFiles: AudioFile[]) {
   const handleLabel = async (category: LabelCategory) => {
     if (currentFile) {
       // In a real app, make an API call to save the label
-      console.log(`Labeling file ${currentFile.name} as ${category}`);
+      console.log(currentFile, category);
       await markAudio(currentFile.name, category);
       setLabeledFiles(prev => new Set([...prev, currentFile.id]));
-      
+      let old = currentFile.category ? currentFile.category : 'unsorted';
+      toast.info(`${currentFile.name} moved from ${old} to ${category}`)
       // Move to next file if available
       if (currentFileIndex < totalFiles - 1) {
         setCurrentFileIndex(prev => prev + 1);
