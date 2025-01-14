@@ -18,4 +18,4 @@ EXPOSE 5173
 
 RUN npm run build
 # Command to run the application
-CMD ["npm", "run", "preview", "--port", "5173"]
+CMD ["npm", "run", "preview"]
